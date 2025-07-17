@@ -1,0 +1,11 @@
+gradio
+fastapi
+uvicorn
+langchain
+langchain_openai
+qdrant-client
+pytesseract==0.3.13
+pdf2image
+python-dotenv
+sentence_transformers
+numpy==1.26.4

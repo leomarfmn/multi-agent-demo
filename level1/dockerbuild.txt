@@ -1,0 +1,2 @@
+docker build --rm -t multi-agent-demo-level1 .
+docker run --name multi-agent-demo-level1-container --rm -p 8080:8080 multi-agent-demo-level1

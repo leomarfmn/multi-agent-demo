@@ -1,0 +1,36 @@
+Level1: Gradio interface (PDF file upload and textboxes input and output), OCR on the file, store vectors on Pinecone, answer with llama or other hugging face open source model. LangChain with everything.
+Level2: everything from level1 plus image and audio upload. Using hugging face models and CrewAI for orquestration.
+Level3: everything from level2, plus chat with memory, observability with LangSmith.
+
+
+🔁 Level 1 — Minor Tweaks
+Vector DB: Pinecone has a free tier but limits vector count. Consider Qdrant (local Docker) or Chroma if you hit limits.
+OCR: Use pytesseract (Tesseract OCR) – works well locally and free.
+Model choice: Local LLaMA-based models like mistral, phi-2, or zephyr via Hugging Face with transformers and ctransformers or gguf (for llama.cpp) can run well on CPU/GPU depending on size.
+
+🔁 Level 2 — Balance Scope
+Audio: Consider Whisper (open source) from OpenAI or Whisper.cpp for local STT.
+Image: For captioning or understanding, use Hugging Face models like BLIP, Donut, or CLIP.
+CrewAI: Great for practice. Just ensure your use case fits a multi-agent pattern (e.g., PDF Reader Agent + Audio Transcriber Agent + Answer Agent). Keep the agents lean.
+
+🔁 Level 3 — Cost-Conscious Scaling
+LangSmith: Has a generous free tier for observability, especially useful with LangChain traces and evaluations.
+Chat with Memory: Stick with LangChain’s local memory (ConversationBufferMemory or summarization memory). If you later need vector-backed memory, Qdrant/Chroma + local storage works fine.
+Optional: Add LangGraph instead of CrewAI if you want to explore dynamic branching, looping, or stateful agents later.
+
+🧠 Recommended Additions
+Testing/Evaluation: Add basic LangChain Evaluation (QAChain, Faithfulness, etc.) to simulate RAG eval pipelines.
+Persistence: Store chat or state in local SQLite or JSON to simulate session-based memory.
+UI polish: Add Gradio Tabs or ChatInterface to better simulate real applications.
+
+🔧 Tools Stack Recap (Free-Friendly)
+Feature	Tool/Tech	Cost
+UI	Gradio	✅ Free
+OCR	pytesseract	✅ Free
+Embeddings	sentence-transformers or bge-small	✅ Free
+Vector Store	Chroma / Qdrant (local)	✅ Free
+Audio	Whisper / whisper.cpp	✅ Free
+LLM	Hugging Face models (e.g. Mistral, TinyLLaMA)	✅ Free
+Agent Orchestration	CrewAI	✅ Free
+Observability	LangSmith	✅ Free tier
+Memory	LangChain memory classes	✅ Free
