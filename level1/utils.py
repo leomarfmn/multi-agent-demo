@@ -1,10 +1,13 @@
 from pdf2image import convert_from_path
 import pytesseract
 import os
+import tempfile
 from qdrant_client import QdrantClient, models
 from fastapi import HTTPException
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
+from fastapi.security.api_key import APIKeyHeader
+from fastapi import Security, status
 
 # Initialize Qdrant client and the embedding model
 load_dotenv()
@@ -17,12 +20,18 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 def run_ocr(pdf_file):
     # Run OCR on the PDF file and split content into manageable chunks
     try:
+        # Save uploaded file if it's an UploadFile (from API call)
+        if not isinstance(pdf_file, str):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+                tmp.write(pdf_file.file.read())
+                pdf_file = tmp.name
+
         docs = convert_from_path(pdf_file)
         records = []
         id_count = 0
 
         for page_number, page_data in enumerate(docs):
-            text = pytesseract.image_to_string(page_data).encode("utf-8").decode("utf-8")
+            text = pytesseract.image_to_string(page_data)
             
             # Clean up the text and skip empty pages
             text = text.strip()
@@ -151,3 +160,37 @@ def similarity_search(question, level_collection):
     except Exception as e:
         print(f"Error during similarity search: {e}")
         raise HTTPException(status_code=500, detail="Similarity search failed")
+    
+
+CUSTOM_CSS = """
+    /* Remove footer */
+    .footer {display: none !important}
+    footer {display: none !important}
+    .gradio-footer {display: none !important}
+    #footer {display: none !important}
+    [class*="footer"] {display: none !important}
+    .wrap.svelte-ymc0vz {visibility: hidden !important}
+
+    /* Custom answer box styling */
+    .answer-box {
+        border: 2px solid #FFA500;
+        border-radius: 8px;
+        padding: 16px;
+        background: #FFFBEA;
+    }
+"""
+
+
+api_key_header = APIKeyHeader(name="Authorization", auto_error=False)
+def verify_developer_token(api_key: str = Security(api_key_header)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Unauthorized",
+    )
+    if api_key is None:
+        raise credentials_exception
+    elif api_key.split(" ")[-1] not in [
+        "86100c8e-8293-11ee-b8b8-229a88394bfa",
+    ]:
+        raise credentials_exception
+    return api_key.split(" ")[-1]

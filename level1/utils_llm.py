@@ -56,7 +56,7 @@ def ask_llm(question, vector_similarity_results):
             "formatted_question": standalone_json["standalone_question"],
             "reasoning_for_formatted_question": standalone_json["reasoning"],
             "answer": rag_json["answer"],
-            "page_references": rag_json["page references"],
+            "page_references": rag_json.get("page references", "No references found.") if rag_json.get('page references', "").strip() != "" else "No references found.",
         }
         return final_json
 

@@ -40,3 +40,33 @@ Here is the answer to your question using the provided context:
 These are the pages that were referenced to answer your question:
 {page_references}
 """
+
+
+INSTRUCTIONS = """
+## About the Project
+
+This demo is Level 1 of a multi-level demo on AI agents. Each level introduces new capabilities and increasing complexity.  
+**Level 1** focuses on document question answering using OCR and Retrieval-Augmented Generation (RAG).  
+- You can upload a PDF file.
+- The system extracts text using OCR, stores it in a vector database (Qdrant), and an LLM (large language model) answers your question using context from the document (using RAG).
+- Higher levels will add support for images, audio, chat memory, and agent orchestration.
+
+## How to Use
+
+1. **Upload a PDF file** using the provided file upload box.
+2. **Type your question** about the document in the question box.
+3. Click **Run Agent** to get an answer based on the document’s content.
+4. Use **Reset** to clear all inputs, or **Clear Response** to clear only the answer box.
+
+**What to Expect:**  
+- The system will read your PDF, extract its text, and search for relevant information.
+- Answers are generated using only the document’s content.
+- Page references are provided so you know where the answer was found.
+- If the answer is not found in the document, it will say "Not found in context."
+
+**Connect with me:**  
+[LinkedIn](https://www.linkedin.com/in/leomar-fonseca/)  
+[GitHub](https://github.com/leomarfmn)
+"""
+
+PLACEHOLDER = "Type your question and press Run Agent."
