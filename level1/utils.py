@@ -190,7 +190,7 @@ def verify_developer_token(api_key: str = Security(api_key_header)):
     if api_key is None:
         raise credentials_exception
     elif api_key.split(" ")[-1] not in [
-        "86100c8e-8293-11ee-b8b8-229a88394bfa",
+        str(os.getenv("DEVELOPER_TOKEN")),
     ]:
         raise credentials_exception
     return api_key.split(" ")[-1]
